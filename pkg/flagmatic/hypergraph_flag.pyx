@@ -599,7 +599,6 @@ cdef class HypergraphFlag (Flag):
 		for fg in flags:
 			mfgs = str(fg)
 			for perm in Permutations(range(1, s + 1)):
-				#permplus = perm + range(s + 1, fg.n + 1)
 				permplus = list(perm) + range(s + 1, fg.n + 1)
 				ntg = tg.__copy__()
 				ntg.relabel(perm)
