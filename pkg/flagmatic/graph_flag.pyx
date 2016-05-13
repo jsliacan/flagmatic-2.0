@@ -27,73 +27,73 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-from sage.rings.arith import binomial
+from sage.arith.all import binomial
 from sage.graphs.graph import Graph
 from hypergraph_flag cimport HypergraphFlag
 
 cdef class GraphFlag (HypergraphFlag):
 
 
-	def __init__(self, representation=None):
-	
-		if type(representation) is Graph:
-			g = representation
-			super(GraphFlag, self).__init__(g.order(), r=2, oriented=False)
-			vertices = g.vertices()
-			for edge in g.edge_iterator():
-				self.add_edge(map(lambda i : vertices.index(i) + 1, edge[:2]))
-		else:
-			super(GraphFlag, self).__init__(representation=representation, r=2, oriented=False)
-			
+        def __init__(self, representation=None):
+        
+                if type(representation) is Graph:
+                        g = representation
+                        super(GraphFlag, self).__init__(g.order(), r=2, oriented=False)
+                        vertices = g.vertices()
+                        for edge in g.edge_iterator():
+                                self.add_edge(map(lambda i : vertices.index(i) + 1, edge[:2]))
+                else:
+                        super(GraphFlag, self).__init__(representation=representation, r=2, oriented=False)
+                        
 
-	def __reduce__(self):
-		return (type(self), (self._repr_(),))
-
-
-	@classmethod
-	def description(cls):
-		return "2-graph"
-	
-
-	@classmethod
-	def default_density_graph(cls):
-		return cls("2:12")
+        def __reduce__(self):
+                return (type(self), (self._repr_(),))
 
 
-	@classmethod
-	def max_number_edges(cls, n):
-		return binomial(n, 2)
+        @classmethod
+        def description(cls):
+                return "2-graph"
+        
+
+        @classmethod
+        def default_density_graph(cls):
+                return cls("2:12")
 
 
-	@classmethod
-	def generate_flags(cls, n, tg, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, tg, r=2, oriented=False, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
+        @classmethod
+        def max_number_edges(cls, n):
+                return binomial(n, 2)
 
 
-	@classmethod
-	def generate_graphs(cls, n, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=False, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
+        @classmethod
+        def generate_flags(cls, n, tg, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, tg, r=2, oriented=False, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
 
 
-	def Graph(self):
-		"""
-		Returns a Sage Graph object.
-		"""
-		
-		g = Graph()
-		g.add_vertices(range(1, self._n + 1))
-		g.add_edges(self.edges)
-		return g
+        @classmethod
+        def generate_graphs(cls, n, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=False, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
 
 
-	def automorphism_group_gens(self):
-		# This function is not very necessary. Just to keep things compatible with Emil's code.
-		# New Sage 6.4.1+ does not relabel graphs to compute automorphism group.
-		
-		G = self.Graph().automorphism_group()
-		trans_gens = [gen.cycle_tuples() for gen in G.gens()]
-		gens = sorted([tuple(sorted(tuple(sorted(cy)) for cy in gen)) for gen in trans_gens])
+        def Graph(self):
+                """
+                Returns a Sage Graph object.
+                """
+                
+                g = Graph()
+                g.add_vertices(range(1, self._n + 1))
+                g.add_edges(self.edges)
+                return g
 
-		return gens
+
+        def automorphism_group_gens(self):
+                # This function is not very necessary. Just to keep things compatible with Emil's code.
+                # New Sage 6.4.1+ does not relabel graphs to compute automorphism group.
+                
+                G = self.Graph().automorphism_group()
+                trans_gens = [gen.cycle_tuples() for gen in G.gens()]
+                gens = sorted([tuple(sorted(tuple(sorted(cy)) for cy in gen)) for gen in trans_gens])
+
+                return gens

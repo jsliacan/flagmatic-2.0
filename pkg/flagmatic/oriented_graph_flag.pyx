@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-from sage.rings.arith import binomial
+from sage.arith.all import binomial
 from sage.graphs.digraph import DiGraph
 from hypergraph_flag cimport HypergraphFlag
 
@@ -35,70 +35,70 @@ from hypergraph_flag cimport HypergraphFlag
 cdef class OrientedGraphFlag (HypergraphFlag):
 
 
-	def __init__(self, representation=None):
-	
-		if type(representation) is DiGraph:
-			g = representation
-			super(OrientedGraphFlag, self).__init__(g.order(), r=2, oriented=True)
-			vertices = g.vertices()
-			for edge in g.edge_iterator():
-				self.add_edge(map(lambda i : vertices.index(i) + 1, edge[:2]))
-		else:
-			super(OrientedGraphFlag, self).__init__(representation=representation, r=2, oriented=True)
+        def __init__(self, representation=None):
+        
+                if type(representation) is DiGraph:
+                        g = representation
+                        super(OrientedGraphFlag, self).__init__(g.order(), r=2, oriented=True)
+                        vertices = g.vertices()
+                        for edge in g.edge_iterator():
+                                self.add_edge(map(lambda i : vertices.index(i) + 1, edge[:2]))
+                else:
+                        super(OrientedGraphFlag, self).__init__(representation=representation, r=2, oriented=True)
 
 
-	def __reduce__(self):
-		return (type(self), (self._repr_(),))
+        def __reduce__(self):
+                return (type(self), (self._repr_(),))
 
 
 
-	@classmethod
-	def description(cls):
-		return "oriented 2-graph"
-	
-	
-	@classmethod
-	def default_density_graph(cls):
-		return cls("2:12")
+        @classmethod
+        def description(cls):
+                return "oriented 2-graph"
+        
+        
+        @classmethod
+        def default_density_graph(cls):
+                return cls("2:12")
 
 
-	@classmethod
-	def max_number_edges(cls, n):
-		return binomial(n, 2)
+        @classmethod
+        def max_number_edges(cls, n):
+                return binomial(n, 2)
 
 
-	@classmethod
-	def generate_flags(cls, n, tg, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, tg, r=2, oriented=True, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
+        @classmethod
+        def generate_flags(cls, n, tg, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, tg, r=2, oriented=True, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
 
-	@classmethod
-	def generate_graphs(cls, n, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=True, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
-
-
-	def DiGraph(self):
-		"""
-		Returns a Sage DiGraph object.
-		"""
-
-		g = DiGraph()
-		g.add_vertices(range(1, self._n + 1))
-		g.add_edges(self.edges)
-		return g
+        @classmethod
+        def generate_graphs(cls, n, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=True, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
 
 
-	def automorphism_group_gens(self):
+        def DiGraph(self):
+                """
+                Returns a Sage DiGraph object.
+                """
 
-		G, d = self.DiGraph().automorphism_group(translation=True)
+                g = DiGraph()
+                g.add_vertices(range(1, self._n + 1))
+                g.add_edges(self.edges)
+                return g
 
-		# Sage gives the graph new labels! Get a translation dictionary, and
-		# relabel the generators back to how they should be.
 
-		rd = dict((v,k) for (k,v) in d.iteritems())
-		trans_gens = [gen.cycle_tuples() for gen in G.gens()]
-		gens = sorted([tuple(sorted(tuple(sorted(map(lambda x : rd[x], cy))) for cy in gen))
-			for gen in trans_gens])
+        def automorphism_group_gens(self):
 
-		return gens
+                G, d = self.DiGraph().automorphism_group(translation=True)
+
+                # Sage gives the graph new labels! Get a translation dictionary, and
+                # relabel the generators back to how they should be.
+
+                rd = dict((v,k) for (k,v) in d.iteritems())
+                trans_gens = [gen.cycle_tuples() for gen in G.gens()]
+                gens = sorted([tuple(sorted(tuple(sorted(map(lambda x : rd[x], cy))) for cy in gen))
+                        for gen in trans_gens])
+
+                return gens

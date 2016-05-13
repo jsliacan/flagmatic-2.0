@@ -27,110 +27,110 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 """
 
-from sage.rings.arith import binomial
+from sage.arith.all import binomial
 from sage.graphs.all import Graph
 from hypergraph_flag cimport HypergraphFlag
 
 cdef class MultigraphFlag (HypergraphFlag):
 
 
-	def __init__(self, multiplicity=1, representation=None):
-		super(MultigraphFlag, self).__init__(representation=representation, r=2, oriented=False, multiplicity=multiplicity)
+        def __init__(self, multiplicity=1, representation=None):
+                super(MultigraphFlag, self).__init__(representation=representation, r=2, oriented=False, multiplicity=multiplicity)
 
 
-	def __reduce__(self):
-		return (type(self), (self._repr_(),))
-	
-	
-	@classmethod
-	def default_density_graph(cls):
-		return cls("2:12")
+        def __reduce__(self):
+                return (type(self), (self._repr_(),))
+        
+        
+        @classmethod
+        def default_density_graph(cls):
+                return cls("2:12")
 
 
-	@classmethod
-	def generate_flags(cls, n, tg, multiplicity=1, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, tg, r=2, oriented=False, multiplicity=multiplicity, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
+        @classmethod
+        def generate_flags(cls, n, tg, multiplicity=1, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, tg, r=2, oriented=False, multiplicity=multiplicity, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
 
 
-	@classmethod
-	def generate_graphs(cls, n, multiplicity=1, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=False, multiplicity=multiplicity, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
+        @classmethod
+        def generate_graphs(cls, n, multiplicity=1, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=False, multiplicity=multiplicity, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
 
 
-	def Graph(self):
-		"""
-		Returns a Sage Graph object.
-		"""
-		
-		return Graph([e for e in self.edges], multiedges=True)
+        def Graph(self):
+                """
+                Returns a Sage Graph object.
+                """
+                
+                return Graph([e for e in self.edges], multiedges=True)
 
 
-	def automorphism_group_gens(self):
+        def automorphism_group_gens(self):
 
-		G, d = self.Graph().automorphism_group(translation=True)
+                G, d = self.Graph().automorphism_group(translation=True)
 
-		# Sage gives the graph new labels! Get a translation dictionary, and
-		# relabel the generators back to how they should be.
+                # Sage gives the graph new labels! Get a translation dictionary, and
+                # relabel the generators back to how they should be.
 
-		rd = dict((v,k) for (k,v) in d.iteritems())
-		trans_gens = [gen.cycle_tuples() for gen in G.gens()]
-		gens = sorted([tuple(sorted(tuple(sorted(map(lambda x : rd[x], cy))) for cy in gen))
-			for gen in trans_gens])
+                rd = dict((v,k) for (k,v) in d.iteritems())
+                trans_gens = [gen.cycle_tuples() for gen in G.gens()]
+                gens = sorted([tuple(sorted(tuple(sorted(map(lambda x : rd[x], cy))) for cy in gen))
+                        for gen in trans_gens])
 
-		return gens
+                return gens
 
 
 cdef class TwoMultigraphFlag (MultigraphFlag):
 
-	def __init__(self, representation=None):
-		super(MultigraphFlag, self).__init__(representation=representation, r=2, oriented=False, multiplicity=2)
+        def __init__(self, representation=None):
+                super(MultigraphFlag, self).__init__(representation=representation, r=2, oriented=False, multiplicity=2)
 
 
-	@classmethod
-	def description(cls):
-		return "2-multigraph"
+        @classmethod
+        def description(cls):
+                return "2-multigraph"
 
 
-	@classmethod
-	def max_number_edges(cls, n):
-		return 2 * binomial(n, 2)
+        @classmethod
+        def max_number_edges(cls, n):
+                return 2 * binomial(n, 2)
 
-	@classmethod
-	def generate_flags(cls, n, tg, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, tg, r=2, oriented=False, multiplicity=2, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
+        @classmethod
+        def generate_flags(cls, n, tg, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, tg, r=2, oriented=False, multiplicity=2, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
 
 
-	@classmethod
-	def generate_graphs(cls, n, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=False, multiplicity=2, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
+        @classmethod
+        def generate_graphs(cls, n, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=False, multiplicity=2, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
 
 
 cdef class ThreeMultigraphFlag (MultigraphFlag):
 
-	def __init__(self, representation=None):
-		super(MultigraphFlag, self).__init__(representation=representation, r=2, oriented=False, multiplicity=3)
+        def __init__(self, representation=None):
+                super(MultigraphFlag, self).__init__(representation=representation, r=2, oriented=False, multiplicity=3)
 
 
-	@classmethod
-	def description(cls):
-		return "3-multigraph"
+        @classmethod
+        def description(cls):
+                return "3-multigraph"
 
 
-	@classmethod
-	def max_number_edges(cls, n):
-		return 3 * binomial(n, 2)
+        @classmethod
+        def max_number_edges(cls, n):
+                return 3 * binomial(n, 2)
 
-	@classmethod
-	def generate_flags(cls, n, tg, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, tg, r=2, oriented=False, multiplicity=3, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
+        @classmethod
+        def generate_flags(cls, n, tg, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, tg, r=2, oriented=False, multiplicity=3, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
 
 
-	@classmethod
-	def generate_graphs(cls, n, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
-		return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=False, multiplicity=3, forbidden_edge_numbers=forbidden_edge_numbers,
-			forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
+        @classmethod
+        def generate_graphs(cls, n, forbidden_edge_numbers=None, forbidden_graphs=None, forbidden_induced_graphs=None):
+                return HypergraphFlag.generate_flags(n, cls(), r=2, oriented=False, multiplicity=3, forbidden_edge_numbers=forbidden_edge_numbers,
+                        forbidden_graphs=forbidden_graphs, forbidden_induced_graphs=forbidden_induced_graphs)
