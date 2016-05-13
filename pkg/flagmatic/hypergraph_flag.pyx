@@ -917,8 +917,12 @@ cdef class HypergraphFlag (Flag):
 
         def make_minimal_isomorph(self):
 
-                cdef int i, *new_edges, *winning_edges, *e
-                cdef int *p, np, is_lower
+                cdef int i
+                cdef int *new_edges
+                cdef int *winning_edges
+                cdef int *e
+                cdef int *p
+                cdef int np, is_lower
                                 
                 self._require_mutable()
                 
@@ -974,7 +978,8 @@ cdef class HypergraphFlag (Flag):
                 if self.is_degenerate:
                         raise NotImplementedError("degenerate graphs are not supported.")
         
-                cdef int i, *c_verts, num_verts
+                cdef int i, num_verts
+                cdef int *c_verts
                                 
                 num_verts = len(verts)
                 c_verts = <int *> malloc(num_verts * sizeof(int))
@@ -987,7 +992,10 @@ cdef class HypergraphFlag (Flag):
 
         cdef HypergraphFlag c_induced_subgraph(self, int *verts, int num_verts):
 
-                cdef int nm = 0, i, j, *e, got, te[3]
+                cdef int nm = 0, i, j
+                cdef int *e
+                cdef int got
+                cdef int te[3]
                 cdef HypergraphFlag ig = type(self)()
 
                 if self.is_degenerate:
@@ -1049,7 +1057,12 @@ cdef class HypergraphFlag (Flag):
                 Determines if it contains h as a subgraph. Labels are ignored.
                 """
         
-                cdef int i, j, k, l, *p, np, *new_edges, *can_use, got_all, got_edge, got
+                cdef int i, j, k, l
+                cdef int *p
+                cdef int np
+                cdef int *new_edges
+                cdef int *can_use
+                cdef int got_all, got_edge, got
         
                 if self.is_degenerate:
                         raise NotImplementedError("degenerate graphs are not supported.")
@@ -1119,7 +1132,13 @@ cdef class HypergraphFlag (Flag):
         
         def has_forbidden_edge_numbers(self, forbidden_edge_numbers, must_have_highest=False):
         
-                cdef int *c, nc, i, j, k, l, fe, *edges, *e, got, *comb, num_e, max_e, ceiling
+                cdef int *c
+                cdef int nc, i, j, k, l, fe
+                cdef int *edges
+                cdef int *e
+                cdef int got
+                cdef int *comb
+                cdef int num_e, max_e, ceiling
         
                 if self.is_degenerate:
                         raise NotImplementedError("degenerate graphs are not supported.")
@@ -1218,7 +1237,8 @@ cdef class HypergraphFlag (Flag):
         
         def has_forbidden_graphs(self, graphs, must_have_highest=False, induced=False):
         
-                cdef int *c, nc, i, j
+                cdef int *c
+                cdef int nc, i, j
                 cdef HypergraphFlag h, ig
                 
                 if self.is_degenerate:
@@ -1445,11 +1465,19 @@ cdef class HypergraphFlag (Flag):
         @classmethod
         def flag_products (cls, graph_block gb, HypergraphFlag tg, graph_block flags1, graph_block flags2):
         
-                cdef int *p, np, *pp, *pf1, *pf2, *edges, *cur_edges
+                cdef int *p
+                cdef int np
+                cdef int *pp
+                cdef int *pf1
+                cdef int *pf2
+                cdef int *edges
+                cdef int *cur_edges
                 cdef int n, s, m1, m2, ne, i, j, k, gi
                 cdef int cnte, cnf1e, cnf2e
                 cdef int has_type, has_f1
-                cdef int f1index, f2index, *grb, equal_flags_mode, nzcount, row
+                cdef int f1index, f2index
+                cdef int *grb
+                cdef int equal_flags_mode, nzcount, row
                 cdef HypergraphFlag g, t, f1, f2
                 
                 rarray = numpy.zeros([0, 5], dtype=numpy.int)
@@ -1605,7 +1633,8 @@ cdef class HypergraphFlag (Flag):
 
 cdef void raw_minimize_edges(int *edges, int m, int r, bint oriented):
 
-        cdef int i, *e, round, swapped
+        cdef int i, round, swapped
+        cdef int *e
         
         if r == 3:
 
@@ -1689,7 +1718,8 @@ previous_permutations = {}
 
 cdef int *generate_permutations_fixing(int n, int s, int *number_of):
 
-        cdef int *p, fac, i, j
+        cdef int *p
+        cdef int fac, i, j
 
         # see if we've already generated it!
         key = (n, s)
@@ -1727,7 +1757,8 @@ cdef int *generate_permutations(int n, int *number_of):
 
 def get_permutations (n):
  
-        cdef int *p, np, i, j
+        cdef int *p
+        cdef int np, i, j
         p = generate_permutations(n, &np)
         return [[p[(i * n) + j] for j in range(n)] for i in range(np)]
 
@@ -1736,7 +1767,8 @@ previous_combinations = {}
 
 cdef int *generate_combinations(int n, int s, int *number_of):
 
-        cdef int *p, fac, i, j
+        cdef int *p
+        cdef int fac, i, j
 
         # see if we've already generated it!
         key = (n, s)
@@ -1767,7 +1799,8 @@ cdef int *generate_combinations(int n, int s, int *number_of):
 
 def get_combinations (n, s):
 
-        cdef int *p, np, i, j
+        cdef int *p
+        cdef int np, i, j
         p = generate_combinations(n, s, &np)
         return [[p[(i * s) + j] for j in range(s)] for i in range(np)]
 
@@ -1777,7 +1810,8 @@ previous_combinations_plus = {}
 
 cdef int *generate_combinations_plus(int n, int s, int *number_of):
 
-        cdef int *p, fac, i, j
+        cdef int *p
+        cdef int fac, i, j
 
         # see if we've already generated it!
         key = (n, s)
@@ -1810,7 +1844,8 @@ cdef int *generate_combinations_plus(int n, int s, int *number_of):
 
 def get_combinations_plus (n, s):
 
-        cdef int *p, np, i, j
+        cdef int *p
+        cdef int np, i, j
         p = generate_combinations_plus(n, s, &np)
         return [[p[(i * s) + j] for j in range(s)] for i in range(np)]
 
@@ -1819,7 +1854,8 @@ previous_pair_combinations = {}
 
 cdef int *generate_pair_combinations(int n, int s, int m1, int m2, int *number_of):
 
-        cdef int *p, fac, i, j
+        cdef int *p
+        cdef int fac, i, j
 
         # see if we've already generated it!
         key = (n, s, m1, m2)
@@ -1875,7 +1911,8 @@ cdef int *generate_pair_combinations(int n, int s, int m1, int m2, int *number_o
 
 def get_pair_combinations (n, s, m1, m2):
 
-        cdef int *p, np, i, j
+        cdef int *p
+        cdef int np, i, j
         p = generate_pair_combinations(n, s, m1, m2, &np)
         return [[p[(i * n) + j] for j in range(n)] for i in range(np)]
 
@@ -1884,7 +1921,8 @@ previous_equal_pair_combinations = {}
 
 cdef int *generate_equal_pair_combinations(int n, int s, int m, int *number_of):
 
-        cdef int *p, fac, i, j, smallest
+        cdef int *p
+        cdef int fac, i, j, smallest
 
         # see if we've already generated it!
         key = (n, s, m)
@@ -1943,7 +1981,8 @@ cdef int *generate_equal_pair_combinations(int n, int s, int m, int *number_of):
 
 def get_equal_pair_combinations (n, s, m):
 
-        cdef int *p, np, i, j
+        cdef int *p
+        cdef int np, i, j
         p = generate_equal_pair_combinations(n, s, m, &np)
         return [[p[(i * n) + j] for j in range(n)] for i in range(np)]
 
